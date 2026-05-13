@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:quizzler_flutter/question.dart';
 import 'question_bank.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 void main() => runApp(Quizzler());
 
@@ -42,6 +43,25 @@ class _QuizPageState extends State<QuizPage> {
   int nextQ = 0;
   questionBankList q = questionBankList();
 
+  void checkAnsweer(bool userPickAnswer) {
+    bool correctAnswer = q.getQuestionAnswer(nextQ);
+    if (correctAnswer == userPickAnswer) {
+      scoreKeeper.add(Icon(Icons.check, color: Colors.green,),);
+      nextQ++;
+    } else {
+      scoreKeeper.add(Icon(Icons.close, color: Colors.red,),);
+      nextQ++;
+    }
+  }
+
+  void reStart() {
+    if (nextQ == 11) {
+      Alert(context: context, title: "Finish!", desc: "Click to Restart").show();
+      nextQ = 0;
+      scoreKeeper.clear();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -68,18 +88,12 @@ class _QuizPageState extends State<QuizPage> {
           child: Padding(
             padding: EdgeInsets.all(15.0),
             child: TextButton(
-                style: TextButton.styleFrom(backgroundColor: Colors.green),
+              style: TextButton.styleFrom(backgroundColor: Colors.green),
                 onPressed: () {
                   setState( () {
-                    bool correctAnswer = q.getQuestionAnswer(nextQ);
-                      if (correctAnswer == true) {
-                        scoreKeeper.add(Icon(Icons.check, color: Colors.green,),);
-                        nextQ++;
-                      } else {
-                        scoreKeeper.add(Icon(Icons.close, color: Colors.red,),);
-                        nextQ++;
-                      }
-                    }
+                    checkAnsweer(true);
+                    reStart();
+                  }
                   );
                 },
                 child: Text('True',
@@ -103,14 +117,8 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 setState( () {
-                  bool correctAnswer = q.getQuestionAnswer(nextQ);
-                  if (correctAnswer == true) {
-                    scoreKeeper.add(Icon(Icons.close, color: Colors.red,),);
-                    nextQ++;
-                  } else {
-                    scoreKeeper.add(Icon(Icons.check, color: Colors.green,),);
-                    nextQ++;
-                  }
+                  checkAnsweer(false);
+                  reStart();
                  }
                 );
               },
