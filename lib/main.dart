@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:quizzler_flutter/question.dart';
+// import 'package:quizzler_flutter/question.dart';
+import 'question_bank.dart';
 
 void main() => runApp(Quizzler());
 
 class Quizzler extends StatelessWidget {
+
+  //PolyMorphism is this:
+  //we inherits some things from a class but tha catch is:
+  //we modifying those things, and first we start with the @override method
+  //for example the build methode bellow we are modifying it with our own things
+  //but still using the core function we integrated from their parent class "StatelessWidget"
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,6 +28,9 @@ class Quizzler extends StatelessWidget {
   }
 }
 
+//Inheritance is basically were we copy things from a different class
+// and we do that by using "extends"
+//and this called Inheritance
 class QuizPage extends StatefulWidget {
   @override
   _QuizPageState createState() => _QuizPageState();
@@ -27,17 +38,9 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
 
-  List <Icon> scoreKeeper = [
-
-  ];
-
-  List<Question> questionBank = [
-    Question('You can lead a cow down stairs but not up stairs.', false),
-    Question('Approximately one quarter of human bones are in the feet.', true),
-    Question('A slug\'s blood is green.', true),
-  ];
-
+  List <Icon> scoreKeeper = [];
   int nextQ = 0;
+  questionBankList q = questionBankList();
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +54,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                questionBank[nextQ].question,
+                q.getQuestionText(nextQ),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -68,7 +71,7 @@ class _QuizPageState extends State<QuizPage> {
                 style: TextButton.styleFrom(backgroundColor: Colors.green),
                 onPressed: () {
                   setState( () {
-                    bool correctAnswer = questionBank[nextQ].answer;
+                    bool correctAnswer = q.getQuestionAnswer(nextQ);
                       if (correctAnswer == true) {
                         scoreKeeper.add(Icon(Icons.check, color: Colors.green,),);
                         nextQ++;
@@ -100,7 +103,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 setState( () {
-                  bool correctAnswer = questionBank[nextQ].answer;
+                  bool correctAnswer = q.getQuestionAnswer(nextQ);
                   if (correctAnswer == true) {
                     scoreKeeper.add(Icon(Icons.close, color: Colors.red,),);
                     nextQ++;
